@@ -12,7 +12,7 @@ def church_image_path(instance, filename):
     # Extract the file extension
     extension = filename.split('.')[-1]
 
-    # Construct the new filename with church id and name
+    # Construct the new filename with church name
     new_filename = f'{name_slug}.{extension}'
 
     # Return the complete path for the new filename
