@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Lista - Pessoas</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .menu a.active {
@@ -18,7 +18,7 @@
             <a href="#" class="btn btn-secondary">Ministérios</a>
         </nav>
         <div class="mb-3">
-            <button class="btn btn-primary">Adicionar Pessoa</button>
+            <a href="{% url 'people_add' %}" class="btn btn-primary">Adicionar</a>
         </div>
         {% if people %}
         <table class="table table-striped">
@@ -37,8 +37,8 @@
                     <td>{{ person.date_of_birth }}</td>
                     <td>{{ person.phone }}</td>
                     <td>
-                        <button class="btn btn-sm btn-warning">Editar</button>
-                        <button class="btn btn-sm btn-danger">Excluir</button>
+                        <a href="{% url 'people_edit' person.id %}" class="btn btn-sm btn-warning">Editar</a>
+                        <button class="btn btn-sm btn-danger" onclick="deletePerson({{ person.id }})">Excluir</button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -50,6 +50,34 @@
         </div>
         {% endif %}
     </div>
+    <script>
+        function deletePerson(personId) {
+            if (confirm('Are you sure you want to delete this person?')) {
+
+                const url = "{% url 'people_delete' 0 %}".replace('/0/', `/${personId}/`);
+                
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Person deleted successfully!') {
+                        location.reload(); // Reload the page to reflect the changes
+                    } else {
+                        alert('Error deleting person. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting person:', error);
+                    alert('Error deleting person. Please try again.');
+                });
+            }
+        }
+
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
