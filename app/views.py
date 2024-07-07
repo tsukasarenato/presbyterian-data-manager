@@ -84,6 +84,10 @@ class PeopleEditView(View):
         person.date_of_birth = request.POST.get('date_of_birth')
         person.is_member = request.POST.get('is_member') == 'true'
         person.status = request.POST.get('status')
+
+        # Convert date from dd/mm/yyyy to yyyy-mm-dd
+        if person.date_of_birth:
+            person.date_of_birth = datetime.strptime(person.date_of_birth, '%d/%m/%Y').date()
         
         if 'image' in request.FILES:
             person.image = request.FILES.get('image')
