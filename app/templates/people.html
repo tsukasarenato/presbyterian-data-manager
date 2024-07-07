@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+{% load filters %}
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,8 +35,8 @@
                 {% for person in people %}
                 <tr>
                     <td>{{ person.name }}</td>
-                    <td>{{ person.date_of_birth }}</td>
-                    <td>{{ person.phone }}</td>
+                    <td>{{ person.date_of_birth|date:'d/m/Y' }}</td>
+                    <td>{{ person.phone|format_phone }}</td>
                     <td>
                         <a href="{% url 'people_edit' person.id %}" class="btn btn-sm btn-warning">Editar</a>
                         <button class="btn btn-sm btn-danger" onclick="deletePerson({{ person.id }})">Excluir</button>
