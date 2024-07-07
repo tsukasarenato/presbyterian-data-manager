@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar - Pessoas</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
@@ -50,7 +51,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="date_of_birth" class="form-label">Data de nascimento</label>
-                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth">
+                    <input type="text" class="form-control" id="date_of_birth" name="date_of_birth">
                 </div>
                 <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="is_member" name="is_member">
@@ -78,9 +79,12 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('personForm').addEventListener('submit', function(event) {
+            const form = document.getElementById('personForm');
+            form.addEventListener('submit', function(event) {
                 event.preventDefault();
 
                 const formData = new FormData(this);
@@ -93,7 +97,7 @@
                 .then(response => response.json())
                 .then(data => {
                     alert('Informações foram salvas com sucesso :D');
-                    document.getElementById('personForm').reset();
+                    form.reset();
                 })
                 .catch(error => {
                     console.error('Error registering person:', error);
@@ -101,24 +105,18 @@
                 });
             });
 
-            // Function to apply mask to phone number field
-            function maskPhone(event) {
-                const keyCode = event.keyCode;
-                const allowedKeys = [8, 37, 39, 46]; // Backspace, arrow keys, delete
-                if (allowedKeys.indexOf(keyCode) !== -1) {
-                    return;
-                }
-
-                const input = event.target;
-                const value = input.value.replace(/\D/g, '');
-                const formattedValue = value.replace(/(\d{2})(\d{5})(\d{4})/, '$1 $2-$3');
-                input.value = formattedValue;
-            }
-
+            // Apply mask to phone number field
             const phoneInput = document.getElementById('phone');
-            phoneInput.addEventListener('input', maskPhone);
-            phoneInput.addEventListener('blur', maskPhone);
-            phoneInput.addEventListener('keydown', maskPhone);
+            phoneInput.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '$1 $2-$3');
+                this.value = value;
+            });
+
+            // Initialize flatpickr with Brazilian date format
+            flatpickr("#date_of_birth", {
+                dateFormat: "d/m/Y"
+            });
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>

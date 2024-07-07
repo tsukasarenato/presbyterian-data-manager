@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.views import View
 from .models import People, Churches
+from datetime import datetime
 
 class LoginView(View):
     def get(self, request):
@@ -44,6 +45,10 @@ class PeopleAddView(View):
         is_member = request.POST.get('is_member') == 'true'
         status = request.POST.get('status')
         image = request.FILES.get('image')
+
+         # Convert date from dd/mm/yyyy to yyyy-mm-dd
+        if date_of_birth:
+            date_of_birth = datetime.strptime(date_of_birth, '%d/%m/%Y').date()
         
         # For simplification, I'm using a fixed church. You can modify this as needed.
         church = Churches.objects.first()
